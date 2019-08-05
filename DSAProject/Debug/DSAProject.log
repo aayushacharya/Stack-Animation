@@ -1,34 +1,13 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(391,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (DSAProject.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-  Button.cpp
-e:\stack animation\dsaproject\button.cpp(19): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
-          with
-          [
-              T=unsigned int
-          ]
-  Cursor.cpp
   Main.cpp
-e:\stack animation\dsaproject\main.cpp(49): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+e:\stack animation\dsaproject\main.cpp(61): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
           with
           [
               T=int
           ]
-e:\stack animation\dsaproject\main.cpp(77): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+e:\stack animation\dsaproject\main.cpp(89): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
           with
           [
               T=int
           ]
-  Stack.cpp
-e:\stack animation\dsaproject\stack.cpp(38): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
-          with
-          [
-              T=unsigned int
-          ]
-e:\stack animation\dsaproject\stack.cpp(107): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-e:\stack animation\dsaproject\stack.cpp(123): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
-          with
-          [
-              T=unsigned int
-          ]
-  Text.cpp
-  Generating Code...
   DSAProject.vcxproj -> E:\Stack Animation\Debug\Stack Animation.exe

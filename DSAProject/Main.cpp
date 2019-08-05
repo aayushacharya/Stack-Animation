@@ -8,45 +8,57 @@ using namespace std;
 int main()
 {
 
-	sf::RenderWindow window(sf::VideoMode(1366, 768), "Stack Animation: ");
+	sf::RenderWindow window(sf::VideoMode(1366, 768), "Stack Animation: ", sf::Style::Fullscreen);
 	window.setFramerateLimit(60);
+		
+	sf::Event event;
 
 	Stack stack;
+	stack.setWindow(&window);
 
 	Button push, pop;
-	pop.setButtonPosition(1150.0f, 350.0f);
+	push.setWindow(&window);
+	pop.setWindow(&window);
+	
+	pop.setButtonPosition(1100.0f, 350.0f);
 	push.setButtonLabel("PUSH");
 	pop.setButtonLabel("POP");
 
 	Text textField;
+	textField.setWindow(&window);
 
 	Cursor cursor;
+	cursor.setWindow(&window);
 
 	sf::Music buttonClick;
 	if (!buttonClick.openFromFile("resources/audio/ButtonClick.wav"))
 		std::cout << "Couldn't open sound" << std::endl;
 	
 
-	
-
-	bool intro = true;
 	while (window.isOpen())
 	{
-		sf::Event event;
+		
 		while (window.pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed)
 				window.close();
+			if (event.type == sf::Event::TextEntered)
+			{
+
+				if (event.key.code == 27)
+					window.close();
+
+			}
 		}
-		if (intro)
-		{
 
-			stack.introAnimation(window);
-			intro = false;
 
-		}
+		stack.introAnimation();
+			
 
-	if (push.cursorHover(sf::Mouse::getPosition().x, sf::Mouse::getPosition().y))
+		
+		
+		
+	if (push.cursorHover(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y))
 	{
 		if (event.type == sf::Event::MouseButtonPressed)
 		{
@@ -78,7 +90,7 @@ int main()
 		{
 
 
-			if (event.type = sf::Event::MouseButtonPressed)
+			if (event.type == sf::Event::MouseButtonPressed)
 			{
 
 				if (event.mouseButton.button == sf::Mouse::Left)
@@ -105,8 +117,9 @@ int main()
 
 					push.unpress();
 					cursor.reset();
-					stack.push(textField.getData(), window);
+					stack.push(textField.getData());
 					textField.setData("");
+					textField.getWidth();
 				
 				}
 				else if (event.key.code == 8)	//ASCII code for BACKSPACE key 
@@ -117,7 +130,7 @@ int main()
 						std::string data=textField.getData();
 						data.erase(data.end() - 1);
 						textField.setData(data);
-						cursor.move(false);
+						cursor.move(textField.getWidth());
 						sf::Clock keyBuffer;
 						while (keyBuffer.getElapsedTime().asMilliseconds() < 200.0f) {}
 
@@ -129,7 +142,7 @@ int main()
 					{
 
 						textField.setData(textField.getData() + static_cast<char>(event.text.unicode));
-						cursor.move();
+						cursor.move(textField.getWidth());
 						sf::Clock keyBuffer;
 						while (keyBuffer.getElapsedTime().asMilliseconds() < 200.0f) {}
 
@@ -145,20 +158,20 @@ int main()
 		
 		if (pop.isPressed())
 		{
-			sf::Clock clk;
-			while (clk.getElapsedTime().asMilliseconds() < 300.0f) {}
-			stack.pop(window);
 			pop.unpress();
+			sf::Clock buttonClickBuffer;
+			while (buttonClickBuffer.getElapsedTime().asMilliseconds() < 200.0f) {}
+			stack.pop();
 
 		}
 
 		window.clear();
 
-		stack.drawSprite(window);
-		push.drawButton(window);
-		pop.drawButton(window);
-		cursor.draw(window);
-		textField.draw(window);
+		stack.drawSprite();
+		push.drawButton();
+		pop.drawButton();
+		cursor.draw();
+		textField.draw();
 
 		window.display();
 		

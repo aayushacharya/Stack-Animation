@@ -18,10 +18,10 @@ Text::Text()
 
 }
 
-void Text::draw(sf::RenderWindow& window)
+void Text::draw()
 {
 
-	window.draw(text);
+	window->draw(text);
 
 }
 
@@ -37,4 +37,27 @@ void Text::setData(std::string data)
 
 	text.setString(data);
 
+}
+
+void Text::setWindow(sf::RenderWindow* Window)
+{
+
+	window = Window;
+
+}
+
+float Text::getWidth()
+{
+	static float prevLength = 0.0f;
+	if (text.getCharacterSize() == 0.0f) {
+		prevLength = 0.0f;
+		
+		return prevLength;
+	}
+	float temp = prevLength;
+	
+	prevLength = text.getGlobalBounds().width;
+	
+	return text.getGlobalBounds().width - temp;
+	
 }

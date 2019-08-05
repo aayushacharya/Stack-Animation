@@ -50,20 +50,26 @@ Stack::Stack()
 
 	}
 
+	warning.setFont(font);
+	warning.setFillColor(sf::Color(90, 13, 12));
+	warning.setPosition(475.0f, 100.0f);
+	warning.setCharacterSize(72);
+
 }
-void Stack::drawSprite(sf::RenderWindow &window)
+void Stack::drawSprite()
 {
 
 	
-	window.draw(BgSprite);
-	window.draw(StackSprite);
+	window->draw(BgSprite);
+	window->draw(StackSprite);
 	for (int i = 0;i < MAX;i++) 
 	{
 
-		window.draw(BlockSprite[i]);
-		window.draw(text[i]);
+		window->draw(BlockSprite[i]);
+		window->draw(text[i]);
 
 	}
+	
 
 	
 
@@ -126,15 +132,23 @@ void Stack::setNormalTexture()
 
 }
 
-void Stack::push(std::string elem,sf::RenderWindow& window)
+void Stack::push(std::string elem)
 {
 	
 	sf::Music land,hovering;
 	if (!land.openFromFile("resources/audio/Land.wav") || !hovering.openFromFile("resources/audio/Hovering.wav"))
 		std::cout << "Couldn't open music" << std::endl;
 	
-	if (top == MAX - 1)
-		std::cout << "Cannot Insert more:" <<std::endl;
+	if (top == MAX - 1) {
+		std::cout << "Cannot Insert more:" << std::endl;
+		warning.setPosition(420.0f, 100.0f);
+		warning.setString("STACK OVERFLOW");
+		sf::Clock delay;
+		window->draw(warning);
+		window->display();
+		while (delay.getElapsedTime().asSeconds() < 2.0f) {}
+		warning.setString("");
+	}
 	else 
 	{
 		
@@ -143,7 +157,8 @@ void Stack::push(std::string elem,sf::RenderWindow& window)
 		bool condition;
 		static int initSound = 0;
 		float offsetX = this->getStackPosition().x - 702.0f-151.0f;
-		this->setBlockPosition(702.0f + offsetX, 100.0f);	//set xPos according to stackPos
+		float offsetY = 2.5f;
+		this->setBlockPosition(702.0f + offsetX, 50.0f);	//set xPos according to stackPos
 		this->text[top].setString(elem);
 		text[top].setPosition(BlockSprite[top].getPosition().x-25.0f, BlockSprite[top].getPosition().y-13.0f);
 		if (elem.length() > 5)
@@ -160,28 +175,36 @@ void Stack::push(std::string elem,sf::RenderWindow& window)
 
 			float milliSec = 0.0f;
 			if (clock.getElapsedTime().asMilliseconds() > milliSec) {
-				if ((BlockSprite[top - 1].getPosition().y - this->getBlockPosition().y) > 150.0f)
+				if ((BlockSprite[top - 1].getPosition().y - this->getBlockPosition().y) > 300.0f)
 				{
-					this->setAnimatedTexture(top);
+					BlockSprite[top].setTexture(BlockAnimText[2], true);
+					BlockSprite[top].setOrigin(94.0f, 128.0f);
 					milliSec += 50;
 					hovering.setLoop(true);
+				}
+				else if ((BlockSprite[top - 1].getPosition().y - this->getBlockPosition().y) > 150.0f && (BlockSprite[top - 1].getPosition().y - this->getBlockPosition().y)<300)
+				{
+					BlockSprite[top].setTexture(BlockAnimText[1], true);
+					BlockSprite[top].setOrigin(94.0f, 128.0f);
+					offsetY = 1.6f;
 				}
 				else {
 					this->setNormalTexture();
 					hovering.stop();
 					if (initSound == 0) {
 						land.play();
+						offsetY = 3.0f;
 						initSound=1;
 					}
 				}
 				
 			}
-			this->moveBlock(0.0f, 3.0f);
+			this->moveBlock(0.0f, offsetY);
 			
-			this->text[top].move(0.0f,3.0f);
-			window.clear();
-			this->drawSprite(window);
-			window.display();
+			this->text[top].move(0.0f,offsetY);
+			window->clear();
+			this->drawSprite();
+			window->display();
 			if (top == 0)
 				condition = this->getBlockPosition().y < (this->getStackPosition().y - 72.0f);
 			else
@@ -197,14 +220,22 @@ void Stack::push(std::string elem,sf::RenderWindow& window)
 
 
 }
-void Stack::pop(sf::RenderWindow& window)
+void Stack::pop()
 {
 
 	sf::Music launch;
 	if (!launch.openFromFile("resources/audio/Launch.wav"))
 		std::cout << "Music cannot opened: " << std::endl;
-	if (top == -1)
+	if (top == -1) {
+		warning.setPosition(480.0f, 100.0f);
 		std::cout << "Stack Empty: " << std::endl;
+		warning.setString("STACK EMPTY");
+		sf::Clock delay;
+		window->draw(warning);
+		window->display();
+		while (delay.getElapsedTime().asSeconds() < 2.0f) {}
+		warning.setString("");
+	}
 	else
 	{
 		
@@ -242,9 +273,9 @@ void Stack::pop(sf::RenderWindow& window)
 			
 			this->moveBlock(0.0f, -5.0f);
 			this->text[top].move(0.0f, -5.0f);
-			window.clear();
-			this->drawSprite(window);
-			window.display();
+			window->clear();
+			this->drawSprite();
+			window->display();
 			
 			
 			
@@ -256,29 +287,50 @@ void Stack::pop(sf::RenderWindow& window)
 	}
 
 }
-void Stack::introAnimation(sf::RenderWindow& window)
+void Stack::introAnimation()
 {
-	
-	float xPos = 0.0f, yPos = 637.0f;
-	float initialVelocityX = 1660.0f/ (60.0f*2.0f*0.5f);
-	float finalVelocityX = initialVelocityX;
-	float accelerationX = -1.0f/0.5f;
-	StackSprite.setPosition(xPos, yPos);
-	StackSprite.setRotation(30.0f);
-	sf::Music swoosh;
-	if (!swoosh.openFromFile("resources/audio/Swooshing.ogg"))
-		std::cout << "Couldn't load sound" << std::endl;
-	sf::Clock clk;
-	clk.restart();
-	swoosh.play();
-	while (clk.getElapsedTime().asSeconds()<0.5f)
+	static bool intro = true;
+	if (intro) 
 	{
-		finalVelocityX = initialVelocityX + 0.5f*accelerationX;
-		StackSprite.move(finalVelocityX, 0);
-		window.clear();
-		this->drawSprite(window);
-		window.display();
+		float xPos = 0.0f, yPos = 637.0f;
+		float initialVelocityX = 1660.0f / (60.0f*2.0f*0.5f);
+		float finalVelocityX = initialVelocityX;
+		float accelerationX = -1.0f / 0.5f;
+
+		StackSprite.setPosition(xPos, yPos);
+		StackSprite.setRotation(30.0f);
+
+		sf::Music swoosh;
+		if (!swoosh.openFromFile("resources/audio/Swooshing.ogg"))
+			std::cout << "Couldn't load sound" << std::endl;
+
+		sf::Clock clk;
+		clk.restart();
+
+		swoosh.play();
+
+		while (clk.getElapsedTime().asSeconds() < 0.5f)
+		{
+			
+			finalVelocityX = initialVelocityX + 0.5f*accelerationX;
+			StackSprite.move(finalVelocityX, 0);
+			window->clear();
+			this->drawSprite();
+			window->display();
+
+		}
+
+		StackSprite.setRotation(0.0f);
+
+		intro = false;
+
 	}
-	StackSprite.setRotation(0.0f);
+
+}
+
+void Stack::setWindow(sf::RenderWindow* Window)
+{
+
+	window = Window;
 
 }

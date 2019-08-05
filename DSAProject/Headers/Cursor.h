@@ -7,10 +7,12 @@ class Cursor{
     private:
         sf::Texture cursorText;
         sf::Sprite cursorSprite;
+		sf::RenderWindow* window;
     public:
         Cursor();
-        void draw(sf::RenderWindow&);
-        void move(bool forward = true);
+        void draw();
+        void move(float offsetX);
         void reset();
 		void display();
+		void setWindow(sf::RenderWindow*);
 };

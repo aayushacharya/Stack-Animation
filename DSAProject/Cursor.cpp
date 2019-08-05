@@ -29,18 +29,14 @@ void Cursor::reset()
 
 }
 
-void Cursor::move(bool forward)
+void Cursor::move(float offsetX)	
 {
-	
-	if(forward)
-		cursorSprite.move(17.0f, 0.0f);
-	else
-		cursorSprite.move(-17.0f, 0.0f);
-
+		std::cout << offsetX << std::endl;
+		cursorSprite.move(offsetX, 0.0f);
 
 }
 
-void Cursor::draw(sf::RenderWindow& window)
+void Cursor::draw()
 {
 	static sf::Clock clk;
 	
@@ -50,7 +46,7 @@ void Cursor::draw(sf::RenderWindow& window)
 		if (clk.getElapsedTime().asMilliseconds() > 750.0f)
 		{
 
-			window.draw(cursorSprite);
+			window->draw(cursorSprite);
 
 		}
 		
@@ -62,5 +58,12 @@ void Cursor::draw(sf::RenderWindow& window)
 		clk.restart();
 
 	}
+
+}
+
+void Cursor::setWindow(sf::RenderWindow* Window)
+{
+	
+	window = Window;
 
 }
