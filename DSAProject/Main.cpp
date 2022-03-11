@@ -8,7 +8,7 @@ using namespace std;
 int main()
 {
 
-	sf::RenderWindow window(sf::VideoMode(1366, 768), "Stack Animation: ", sf::Style::Fullscreen);
+	sf::RenderWindow window(sf::VideoMode(1366, 768), "Stack Animation: ");
 	window.setFramerateLimit(60);
 		
 	sf::Event event;

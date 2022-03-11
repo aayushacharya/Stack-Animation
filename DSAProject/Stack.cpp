@@ -321,7 +321,7 @@ void Stack::introAnimation()
 		}
 
 		StackSprite.setRotation(0.0f);
-
+		StackSprite.setPosition(830.0f, yPos);
 		intro = false;
 
 	}
